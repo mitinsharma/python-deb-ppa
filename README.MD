@@ -1,6 +1,6 @@
-# Python Debian Package & Launchpad PPA Upload Guide
+## Python Debian Package & Launchpad PPA Upload Guide
 
-## 📋 Prerequisites
+### 📋 Prerequisites
 ```bash
 # Install dependencies
 sudo apt install -y \
@@ -16,7 +16,7 @@ sudo apt install -y \
     ubuntu-dev-tools
 ```
 
-## Create a Launchpad Account & Generate GPG Keys
+### Create a Launchpad Account & Generate GPG Keys
 ```bash
 gpg --full-generate-key
 gpg --list-keys
@@ -25,7 +25,7 @@ gpg --send-keys --keyserver keyserver.ubuntu.com <YOUR_KEY_ID>
 Generate key using full-generate and send keys to the key server.
 Copy the key and add it to the Launchpad's OpenPGP keys
 
-##  Initialize packaging
+###  Initialize packaging
 ```bash
 dh_make --native --indep --packagename hello-ppa_0.1 --email <email> -y
 
@@ -33,7 +33,7 @@ dh_make --native --indep --packagename hello-ppa_0.1 --email <email> -y
 rm debian/*.ex debian/*.EX debian/README.*
 ```
 
-###  Edit debian/control
+####  Edit debian/control
 ```bash
 Source: hello-ppa
 Section: python
@@ -49,14 +49,14 @@ Depends: ${python3:Depends}, ${misc:Depends}
 Description: Example Python PPA package
 ```
 
-###  Edit debian/changelog
+####  Edit debian/changelog
 ```bash
 hello-ppa (0.1-1~ppa1) jammy; urgency=medium
   * Initial release
  -- Name <email>  Mon, 01 Jan 2024 12:00:00 +0000
  ```
 
-###  Edit debian/rules (TAB-indented!)
+####  Edit debian/rules (TAB-indented!)
 ```bash
 #!/usr/bin/make -f
 
@@ -64,23 +64,23 @@ hello-ppa (0.1-1~ppa1) jammy; urgency=medium
   dh $@ --with python3
  ```
 
-##  Generate source tarball
+###  Generate source tarball
 ```bash
 python3 setup.py sdist
 mv dist/hello-ppa-0.1.tar.gz ../hello-ppa_0.1.orig.tar.gz
 ```
 
-## Install build dependencies
+### Install build dependencies
 ```bash
 sudo mk-build-deps --install --remove debian/control
 ```
 
-## Build source package
+### Build source package
 ```bash
 debuild -S -sa -kYOUR_GPG_KEY_ID
 ```
 
-## Upload to Launchpad PPA
+### Upload to Launchpad PPA
 ```bash
 dput ppa:your-launchpad-username/ppa-name ../hello-ppa_0.1-1~ppa1_source.changes
 ```
